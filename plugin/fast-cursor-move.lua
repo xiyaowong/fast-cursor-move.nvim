@@ -1,17 +1,21 @@
 local fn = vim.fn
 
 local function vscode_move(direction, step)
-	local to
+	local to, by
 	if direction == "j" then
 		to = "down"
+		by = "wrappedLine"
 	elseif direction == "k" then
 		to = "up"
+		by = "wrappedLine"
 	elseif direction == "h" then
 		to = "left"
+		by = "character"
 	else
 		to = "right"
+		by = "character"
 	end
-	fn.VSCodeNotify("cursorMove", { to = to, by = "wrappedLine", value = step })
+	fn.VSCodeNotify("cursorMove", { to = to, by = by, value = step })
 	return "<esc>" -- ! need this to clear v:count in vscode
 end
 
@@ -21,7 +25,7 @@ local get_move_step = (function()
 	local prev_direction
 	local prev_time = 0
 	local move_count = 0
-	local ACCELERATION_TABLE = { 7, 13, 18, 22, 25, 28, 30, 32 }
+	local ACCELERATION_TABLE = { 7, 14, 20, 26, 31, 36, 40, 44 }
 	local ACCELERATION_LIMIT = 150
 	return function(direction)
 		if direction ~= prev_direction then
