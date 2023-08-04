@@ -58,10 +58,10 @@ local function move(direction)
 end
 
 local function setup()
-	vim.keymap.set("n", "j", function()
+	vim.keymap.set({ "n", "v" }, "j", function()
 		return move("j")
 	end, { expr = true })
-	vim.keymap.set("n", "k", function()
+	vim.keymap.set({ "n", "v" }, "k", function()
 		return move("k")
 	end, { expr = true })
 end
