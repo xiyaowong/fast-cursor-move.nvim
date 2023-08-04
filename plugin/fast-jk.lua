@@ -1,13 +1,15 @@
-local api = vim.api
 local fn = vim.fn
 
-local basic_move
+local function vscode_move(direction, step)
+	fn.VSCodeNotify("cursorMove", { to = direction == "j" and "down" or "up", by = "wrappedLine", value = step })
+	return "<esc>" -- ! need this to clear v:count in vscode
+end
 
 -- Main logic
 local prev_direction
 local prev_time = 0
 local move_count = 0
-local ACCELERATION_TABLE = { 6, 12, 17, 21, 24, 26, 28, 30 }
+local ACCELERATION_TABLE = { 6, 12, 17, 21, 24, 27, 30, 33 }
 local ACCELERATION_LIMIT = 150
 
 local function get_step()
@@ -20,8 +22,16 @@ local function get_step()
 end
 
 local function move(direction)
+	if fn.reg_recording() ~= "" or fn.reg_executing() ~= "" then
+		return "g" .. direction
+	end
+
 	if vim.v.count > 0 then
-		return basic_move(direction, vim.v.count)
+		if vim.g.vscode then
+			return vscode_move(direction, vim.v.count)
+		else
+			return "g" .. direction
+		end
 	end
 
 	if direction ~= prev_direction then
@@ -38,29 +48,22 @@ local function move(direction)
 		end
 		prev_time = time
 	end
+
 	local step = get_step()
-	basic_move(direction, step)
+	if vim.g.vscode then
+		return vscode_move(direction, step)
+	else
+		return step .. "g" .. direction
+	end
 end
 
 local function setup()
-	if vim.g.vscode then
-		basic_move = function(direction, step)
-			fn.VSCodeNotify(
-				"cursorMove",
-				{ to = direction == "j" and "down" or "up", by = "wrappedLine", value = step }
-			)
-		end
-	else
-		basic_move = function(direction, step)
-			api.nvim_feedkeys(step .. "g" .. direction, "n", true)
-		end
-	end
 	vim.keymap.set("n", "j", function()
-		move("j")
-	end)
+		return move("j")
+	end, { expr = true })
 	vim.keymap.set("n", "k", function()
-		move("k")
-	end)
+		return move("k")
+	end, { expr = true })
 end
 
 vim.defer_fn(setup, 500)
