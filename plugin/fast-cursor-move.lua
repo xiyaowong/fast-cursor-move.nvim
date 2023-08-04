@@ -1,4 +1,5 @@
 local fn = vim.fn
+local api = vim.api
 
 local function vscode_move(direction, step)
 	local to, by
@@ -64,12 +65,15 @@ end
 
 local function move(direction)
 	local move_chars = get_move_chars(direction)
+
 	if fn.reg_recording() ~= "" or fn.reg_executing() ~= "" then
 		return move_chars
 	end
 
+	local is_visual = api.nvim_get_mode().mode:lower() == "v"
+
 	if vim.v.count > 0 then
-		if vim.g.vscode then
+		if vim.g.vscode and not is_visual then
 			return vscode_move(direction, vim.v.count)
 		else
 			return move_chars
@@ -77,7 +81,7 @@ local function move(direction)
 	end
 
 	local step = get_move_step(direction)
-	if vim.g.vscode then
+	if vim.g.vscode and not is_visual then
 		return vscode_move(direction, step)
 	else
 		return step .. move_chars
