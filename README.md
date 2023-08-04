@@ -1,10 +1,10 @@
 # fast-jk
 
-Accelerate jk moving. Also worked in vscode-neovim.
+Accelerate `hjkl` moving. Also worked in vscode-neovim.
 
 ## Install
 
-`xiyaowong/fast-jk.nvim`
+`xiyaowong/fast-cursor-move.nvim`
 
 ## Usage
 
