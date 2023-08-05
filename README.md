@@ -1,4 +1,4 @@
-# fast-jk
+# fast-cursor-move
 
 Accelerate `hjkl` moving. Also worked in vscode-neovim.
 
