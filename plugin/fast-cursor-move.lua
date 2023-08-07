@@ -70,10 +70,10 @@ local function move(direction)
 		return move_chars
 	end
 
-	local is_visual = api.nvim_get_mode().mode:lower() == "v"
+	local is_normal = api.nvim_get_mode().mode:lower() == "n"
 
 	if vim.v.count > 0 then
-		if vim.g.vscode and not is_visual then
+		if vim.g.vscode and is_normal  then
 			return vscode_move(direction, vim.v.count)
 		else
 			return move_chars
@@ -81,7 +81,7 @@ local function move(direction)
 	end
 
 	local step = get_move_step(direction)
-	if vim.g.vscode and not is_visual then
+	if vim.g.vscode and  is_normal then
 		return vscode_move(direction, step)
 	else
 		return step .. move_chars
