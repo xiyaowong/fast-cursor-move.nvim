@@ -26,7 +26,8 @@ local get_move_step = (function()
 	local prev_direction
 	local prev_time = 0
 	local move_count = 0
-	local ACCELERATION_TABLE = { 7, 14, 20, 26, 31, 36, 40, 44 }
+	local ACCELERATION_TABLE_VERTICAL = { 7, 14, 20, 26, 31, 36, 40 }
+	local ACCELERATION_TABLE_HORIZONTAL = { 10, 15, 20, 25 }
 	local ACCELERATION_LIMIT = 150
 	return function(direction)
 		if direction ~= prev_direction then
@@ -43,13 +44,17 @@ local get_move_step = (function()
 			end
 			prev_time = time
 		end
+
+		local acceleration_table = (
+			(direction == "j" or direction == "k") and ACCELERATION_TABLE_VERTICAL or ACCELERATION_TABLE_HORIZONTAL
+		)
 		-- calc step
-		for idx, count in ipairs(ACCELERATION_TABLE) do
+		for idx, count in ipairs(acceleration_table) do
 			if move_count < count then
 				return idx
 			end
 		end
-		return #ACCELERATION_TABLE
+		return #acceleration_table
 	end
 end)()
 
@@ -73,7 +78,7 @@ local function move(direction)
 	local is_normal = api.nvim_get_mode().mode:lower() == "n"
 
 	if vim.v.count > 0 then
-		if vim.g.vscode and is_normal  then
+		if vim.g.vscode and is_normal then
 			return vscode_move(direction, vim.v.count)
 		else
 			return move_chars
@@ -81,7 +86,7 @@ local function move(direction)
 	end
 
 	local step = get_move_step(direction)
-	if vim.g.vscode and  is_normal then
+	if vim.g.vscode and is_normal then
 		return vscode_move(direction, step)
 	else
 		return step .. move_chars
