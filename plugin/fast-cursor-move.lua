@@ -1,6 +1,13 @@
 local fn = vim.fn
 local api = vim.api
 
+local ACCELERATION_LIMIT = 150
+local ACCELERATION_TABLE_VERTICAL = { 7, 14, 20, 26, 31, 36, 40 }
+local ACCELERATION_TABLE_HORIZONTAL = { 10, 15, 20 }
+if vim.g.vscode then
+	ACCELERATION_TABLE_VERTICAL = { 7, 14, 20, 26 }
+end
+
 local function vscode_move(direction, step)
 	local to, by
 	if direction == "j" then
@@ -26,9 +33,6 @@ local get_move_step = (function()
 	local prev_direction
 	local prev_time = 0
 	local move_count = 0
-	local ACCELERATION_TABLE_VERTICAL = { 7, 14, 20, 26, 31, 36, 40 }
-	local ACCELERATION_TABLE_HORIZONTAL = { 10, 15, 20, 25 }
-	local ACCELERATION_LIMIT = 150
 	return function(direction)
 		if direction ~= prev_direction then
 			prev_time = 0
