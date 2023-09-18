@@ -8,6 +8,10 @@ if vim.g.vscode then
 	ACCELERATION_TABLE_VERTICAL = { 7, 14, 20, 26 }
 end
 
+---VSCode's cursorMove
+---@param direction "j" | "k"
+---@param step integer
+---@return string
 local function vscode_move(direction, step)
 	local to, by
 	if direction == "j" then
@@ -16,12 +20,8 @@ local function vscode_move(direction, step)
 	elseif direction == "k" then
 		to = "up"
 		by = "wrappedLine"
-	elseif direction == "h" then
-		to = "left"
-		by = "character"
 	else
-		to = "right"
-		by = "character"
+		return step .. direction -- won't happen
 	end
 	fn.VSCodeNotify("cursorMove", { to = to, by = by, value = step })
 	return "<esc>" -- ! need this to clear v:count in vscode
@@ -62,6 +62,8 @@ local get_move_step = (function()
 	end
 end)()
 
+---@param direction "h" | "j" | "k" | "l"
+---@return "h" | "gj" | "gk" | "l"
 local function get_move_chars(direction)
 	if direction == "j" then
 		return "gj"
@@ -80,9 +82,10 @@ local function move(direction)
 	end
 
 	local is_normal = api.nvim_get_mode().mode:lower() == "n"
+	local use_vscode = vim.g.vscode and is_normal and direction ~= "h" and direction ~= "l"
 
 	if vim.v.count > 0 then
-		if vim.g.vscode and is_normal then
+		if use_vscode then
 			return vscode_move(direction, vim.v.count)
 		else
 			return move_chars
@@ -90,7 +93,7 @@ local function move(direction)
 	end
 
 	local step = get_move_step(direction)
-	if vim.g.vscode and is_normal then
+	if use_vscode then
 		return vscode_move(direction, step)
 	else
 		return step .. move_chars
