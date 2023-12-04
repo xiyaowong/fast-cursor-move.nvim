@@ -14,22 +14,16 @@ end
 ---@return string
 local function vscode_move(direction, step)
 	local to, by
-	local value = step
-	local curr_lnum = fn.line(".")
 	if direction == "j" then
 		to = "down"
 		by = "wrappedLine"
-		value = math.min(fn.line("$") - curr_lnum, step)
 	elseif direction == "k" then
 		to = "up"
 		by = "wrappedLine"
-		value = math.min(curr_lnum - 1, step)
 	else
 		return step .. direction -- won't happen
 	end
-	if value > 0 then
-		fn.VSCodeNotify("cursorMove", { to = to, by = by, value = step })
-	end
+	fn.VSCodeNotify("cursorMove", { to = to, by = by, value = step })
 	return "<esc>" -- ! need this to clear v:count in vscode
 end
 
