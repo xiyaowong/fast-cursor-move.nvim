@@ -1,16 +1,16 @@
 # fast-cursor-move
 
-Accelerate `hjkl` moving. Also worked in vscode-neovim.
+This plugin accelerates the movement of the `hjkl` keys. It also works in vscode-neovim.
 
-## Install
+## Installation
 
 `xiyaowong/fast-cursor-move.nvim`
 
 ## Usage
 
-- No configuration.
-- Install and make sure this plugin loaded.
+- No configuration is required.
+- Make sure the plugin is installed and loaded.
 
-I think most people will be satisfied with the default behavior of the plugin :)
+I believe that the default behavior of the plugin will satisfy most users :)
 
-<sub> This plugin is not opinionated, feel free to open a issue if you want something </sub>
+<sub> This plugin is not opinionated, so feel free to open an issue if you want to suggest any changes or improvements. </sub>
