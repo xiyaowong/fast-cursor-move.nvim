@@ -1,3 +1,6 @@
+-- Options:
+-- vim.g.fast_cursor_move_acceleration -> Set it to fasle to disable the acceleration behaviour
+
 local fn = vim.fn
 local api = vim.api
 
@@ -34,6 +37,10 @@ local get_move_step = (function()
 	local prev_time = 0
 	local move_count = 0
 	return function(direction)
+		if vim.g.fast_cursor_move_acceleration == false then
+			return 1
+		end
+
 		if direction ~= prev_direction then
 			prev_time = 0
 			move_count = 0

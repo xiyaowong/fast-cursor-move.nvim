@@ -13,4 +13,6 @@ This plugin accelerates the movement of the `hjkl` keys. It also works in vscode
 
 I believe that the default behavior of the plugin will satisfy most users :)
 
-<sub> This plugin is not opinionated, so feel free to open an issue if you want to suggest any changes or improvements. </sub>
+## Options
+
+- `vim.g.fast_cursor_move_acceleration` Set it to false to disable the acceleration behaviour.
